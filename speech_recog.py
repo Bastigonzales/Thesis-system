@@ -13,7 +13,7 @@ while True:
             recognizer.adjust_for_ambient_noise(mic, duration=0.2)
             audio = recognizer.listen(mic)
 
-            text = recognizer.recognize_google_cloud(audio)
+            text = recognizer.recognize_vosk(audio)
             text = text.lower()
 
             print(f"Recognized {text}")
