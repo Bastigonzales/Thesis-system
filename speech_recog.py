@@ -6,7 +6,7 @@ import vosk
 #Speech To Text Layout
 
 layout = [[sg.Text("Speech to Text")],
-          [sg.Multiline(size=(7 0, 20), key="-OUTPUT-")], 
+          [sg.Multiline(size=(70, 20), key="-OUTPUT-")], 
           [sg.Button("Record", button_color=('white', 'grey'), border_width=10), 
            sg.Button("Exit", button_color=('white', 'red'), border_width=10)]]
 
