@@ -80,7 +80,7 @@ Top_frame.place(x=0,y=0)
 Logo=PhotoImage(file="./images/tonyo_Icon.png")
 Label(Top_frame,image=Logo,bg="#ffffff").place(x=10,y=5)
 
- 
+
 # Create a label and entry field for the text
 text_label = tk.Label(root, text="Preset Conversations:", bg="white", font=("bold", 10))
 text_label.pack()
@@ -130,7 +130,7 @@ text_box = tk.Text(root, height=5, width=30, x=20, y=100)
 text_box.pack()
 record_button = tk.Button(root, text="Speak")
 record_button.pack()
-record_button.place(x=50, y=100)
+record_button.place(x=420, y=100)
 
 
 #Start the main loop
