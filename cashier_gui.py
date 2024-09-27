@@ -1,7 +1,9 @@
 import tkinter as tk
+from RealtimeSTT import AudioToTextRecorder
 import pyttsx3
 import speech_recognition as sr
-import PySimpleGUI as sg
+import colorama
+import os
 from tkinter import *
 from tkinter import filedialog
 from tkinter.ttk import Combobox
@@ -126,12 +128,16 @@ speak_button.place(x=550,y=500)
 
 
 #Speech To Text Button
-text_box = tk.Text(root, height=5, width=30, x=20, y=100)
-text_box.pack()
+
 record_button = tk.Button(root, text="Speak")
-record_button.pack()
-record_button.place(x=420, y=100)
+record_button.place(x=420, y=100, width=50)
+
+#Stop Button
+stop_button = tk.Button(root, text="Stop")
+stop_button.place(x=420, y=150, width=50)
 
 
+
+if __name__ == "__main__":
 #Start the main loop
-root.mainloop()
+    root.mainloop()
