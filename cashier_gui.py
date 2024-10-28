@@ -1,8 +1,6 @@
 import tkinter as tk
 from RealtimeSTT import AudioToTextRecorder
 import pyttsx3
-import speech_recognition as sr
-import colorama
 import os
 from tkinter import *
 from tkinter import filedialog
@@ -139,5 +137,4 @@ stop_button.place(x=420, y=150, width=50)
 
 
 if __name__ == "__main__":
-#Start the main loop
     root.mainloop()
