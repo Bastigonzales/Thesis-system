@@ -94,7 +94,7 @@ class AudioToTextRecorder:
     def __init__(self,
                  model: str = INIT_MODEL_TRANSCRIPTION,
                  language: str = "",
-                 compute_type: str = "default",
+                 compute_type: str = "float32",
                  input_device_index: int = None,
                  gpu_device_index: Union[int, List[int]] = 0,
                  device: str = "cuda",
