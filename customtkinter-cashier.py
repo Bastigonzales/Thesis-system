@@ -1,159 +1,129 @@
 import customtkinter as ctk
 import pyttsx3
 from RealtimeSTT import AudioToTextRecorder
- 
+
+# Menu items
+menu = {
+    "Tonyo's Special Lugaw": 3.00,
+    "Longsilog": 129.00,
+    "Tapsilog": 129.00,
+    "Tocilog": 129.00,
+    "Pansit bihon (Regular)": 189.00,
+    "Lumpiang Shanghai (20pcs)": 269.00,
+    "Coke Can": 75.05,
+    "Iced tea": 80.00,
+    "Halo-Halo": 120.00,
+}
+
 # Initialize TTS engine
 tts_engine = pyttsx3.init()
 
-#Speak Hello
-def speak_hello():
-    engine = pyttsx3.init()
-    engine.say("Hello!")
-    engine.runAndWait()
-    engine.stop()
+# Text-to-Speech functions
+def speak_text(text):
+    tts_engine.say(text)
+    tts_engine.runAndWait()
 
-
-#Speak Good Morning
-def speak_morning():
-    engine = pyttsx3.init()
-    engine.say("Good Morning!")
-    engine.runAndWait()
-    engine.stop()
-
-
-#Speak Good Afternoon
-def speak_afternoon():
-    engine = pyttsx3.init()
-    engine.say("Good Afternoon!")
-    engine.runAndWait()
-    engine.stop()
-
-
-#Speak Good Evening
-def speak_evening():
-    engine = pyttsx3.init()
-    engine.say("Good Evening!")
-    engine.runAndWait()
-    engine.stop()
-
-#Speak How May I help
-def speak_help():
-    engine = pyttsx3.init()
-    engine.say("How May I help you?")
-    engine.runAndWait()
-    engine.stop()
-
-
-#Speak Do you want to add anything
-def speak_add():
-    engine = pyttsx3.init()
-    engine.say("Do you want too add anything?")
-    engine.runAndWait()
-    engine.stop()
-
-#Speak Thank you
-def speak_thanks():
-    engine = pyttsx3.init()
-    engine.say("Thank you!!")
-    engine.runAndWait()
-    engine.stop()
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
         # Set window title and size
-        self.title("Speech to Text - Text to Speech")
-        self.geometry("900x500")
+        self.title("Speech to Text - Text to Speech - Menu Concession")
+        self.geometry("1200x600")
 
         # Initialize the audio-to-text recorder
         self.recorder = AudioToTextRecorder(spinner=False, model="small.en", language="en")
-        
-        # Textbox widget to display the transcribed text
-        self.text_widget = ctk.CTkTextbox(self, height=120, width=250)
+
+        # --- Left-Side Menu ---
+        self.left_frame = ctk.CTkFrame(self, width=200, corner_radius=10)
+        self.left_frame.pack(side="left", fill="y", padx=10, pady=10)
+
+        self.menu_label = ctk.CTkLabel(self.left_frame, text="Menu", font=ctk.CTkFont(size=14, weight="bold"))
+        self.menu_label.pack(pady=10)
+
+        for index, (item, price) in enumerate(menu.items(), start=1):
+            menu_item_label = ctk.CTkLabel(self.left_frame, text=f"{index}. {item} - ₱{price:.2f}")
+            menu_item_label.pack(anchor="w", padx=10, pady=2)
+
+        # --- Right-Side Content ---
+        self.main_frame = ctk.CTkFrame(self, corner_radius=10)
+        self.main_frame.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+
+        # Cart and Total Section
+        self.cart_label = ctk.CTkLabel(self.main_frame, text="Cart", font=ctk.CTkFont(size=14, weight="bold"))
+        self.cart_label.pack(anchor="nw", pady=10)
+
+        self.cart_box = ctk.CTkTextbox(self.main_frame, height=250, width=400)
+        self.cart_box.pack(pady=10)
+
+        self.total_label = ctk.CTkLabel(self.main_frame, text="Total: ₱0.00", font=ctk.CTkFont(size=12))
+        self.total_label.pack(anchor="nw", pady=10)
+
+        # Add Items to Cart Buttons
+        self.cart = []
+        self.total = 0
+        for index, (item, price) in enumerate(menu.items(), start=1):
+            btn = ctk.CTkButton(self.main_frame, text=f"Add {item}", command=lambda i=item, p=price: self.add_to_cart(i, p))
+            btn.pack(pady=2)
+
+        # Speech-to-Text Section
+        self.text_widget = ctk.CTkTextbox(self.main_frame, height=120, width=250)
         self.text_widget.place(x=600, y=20)
-        
-        # Button to start the speech-to-text transcription process
-        self.start_button = ctk.CTkButton(self, text="Speak", width=50, command=self.start_transcription)
-        self.start_button.place(x=600, y=160)
-        
-        # Button to stop the speech-to-text transcription process
-        self.stop_button = ctk.CTkButton(self, text="Stop", width=50, command=self.stop_transcription)
-        self.stop_button.place(x=700, y=160)
-        # Disable the stop button initially because transcription hasn't started yet
+
+        self.start_button = ctk.CTkButton(self.main_frame, text="Speak", width=50, command=self.start_transcription)
+        self.start_button.place(x=600, y=200)
+
+        self.stop_button = ctk.CTkButton(self.main_frame, text="Stop", width=50, command=self.stop_transcription)
+        self.stop_button.place(x=700, y=220)
         self.stop_button.configure(state=ctk.DISABLED)
 
-        # Button to exit the application
-        self.ctrl_c_button = ctk.CTkButton(self, text="Exit", width=50, command=self.exit_with_ctrl_c)
-        self.ctrl_c_button.place(x=800, y=160)
+        # Text-to-Speech Buttons
+        self.tts_frame = ctk.CTkFrame(self.main_frame, corner_radius=10)
+        self.tts_frame.pack(pady=20)
 
-        #Text to Speech Buttons
-        self.speak_button = ctk.CTkButton(self, text="Hello", width=70, command=speak_hello)
-        self.speak_button.place(x=580,y=220)
+        self.speak_buttons = [
+            ("Hello", "Hello!"),
+            ("Good Morning", "Good Morning!"),
+            ("Good Afternoon", "Good Afternoon!"),
+            ("Good Evening", "Good Evening!"),
+            ("How May I Help You?", "How May I Help You?"),
+            ("Do You Want to Add Anything?", "Do You Want to Add Anything?"),
+            ("Thank You", "Thank you!"),
+        ]
 
-        self.speak_button = ctk.CTkButton(self, text="Good Morning", width=70, command=speak_morning)
-        self.speak_button.place(x=580,y=260)
+        for text, message in self.speak_buttons:
+            btn = ctk.CTkButton(self.tts_frame, text=text, width=200, command=lambda m=message: speak_text(m))
+            btn.pack(pady=5)
 
-        self.speak_button = ctk.CTkButton(self, text="Good Afternoon", width=70, command=speak_afternoon)
-        self.speak_button.place(x=580,y=300)
+    # --- Add Items to Cart ---
+    def add_to_cart(self, item, price):
+        self.cart.append(item)
+        self.cart_box.insert("end", f"{item}\n")
+        self.total += price
+        self.total_label.configure(text=f"Total: ₱{self.total:.2f}")
 
-        self.speak_button = ctk.CTkButton(self, text="Good Evening", width=70, command=speak_evening)
-        self.speak_button.place(x=580,y=340)
-
-        self.speak_button = ctk.CTkButton(self, text="How May I help you?", width=70, command=speak_help)
-        self.speak_button.place(x=580,y=380)
-
-        self.speak_button = ctk.CTkButton(self, text="Do you want too add anything?", width=70, command=speak_add)
-        self.speak_button.place(x=580,y=420)
-
-        self.speak_button = ctk.CTkButton(self, text="Thank You", width=70, command=speak_thanks)
-        self.speak_button.place(x=580,y=460)
-
-    # Method to handle the exit button click (closes the window)
-    def exit_with_ctrl_c(self):
-        self.destroy()  # Destroys the window and exits the application
-
-    # Method to start the transcription process
+    # --- Speech-to-Text Methods ---
     def start_transcription(self):
-        print("start pressed")  # For debugging purposes
         if self.recorder:
-            print("starting recording")  # Debugging message
-
-            # Start the speech-to-text recording
-            # Disable the start button and enable the stop button while recording
-            self.recorder.start()  
+            self.recorder.start()
             self.start_button.configure(state=ctk.DISABLED)
             self.stop_button.configure(state=ctk.NORMAL)
 
-    # Method to update the text widget with transcribed text
-    def update_text(self, text):
-
-        # Insert the transcribed text at the end of the text widget
-        self.text_widget.insert(ctk.END, text)
-
-        # Scroll the text widget to show the latest transcribed text
-        self.text_widget.see(ctk.END)
-
-    # Method to stop the transcription process and display the result
     def stop_transcription(self):
         if self.recorder:
-            self.recorder.stop()  # Stop the speech-to-text recording
-
-            text = self.recorder.text()  # Get the transcribed text
-
-            self.update_text(text)  # Update the text widget with the transcription
-            # Re-enable the start button and disable the stop button after recording
-            
+            self.recorder.stop()
+            text = self.recorder.text()
+            self.update_text(text)
             self.start_button.configure(state=ctk.NORMAL)
             self.stop_button.configure(state=ctk.DISABLED)
 
-# Main execution starts here
-if __name__ == "__main__":
-    # Set the appearance mode (light or dark theme)
-    ctk.set_appearance_mode("light") 
+    def update_text(self, text):
+        self.text_widget.insert(ctk.END, text)
+        self.text_widget.see(ctk.END)
 
-    # Set the default color theme for the widgets
+# Run the application
+if __name__ == "__main__":
+    ctk.set_appearance_mode("light")
     ctk.set_default_color_theme("blue")
-    
-    # Create an instance of the App class and run the main event loop
     app = App()
     app.mainloop()

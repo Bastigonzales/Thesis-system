@@ -1,7 +1,7 @@
 # Menu Concession
 
 menu = {
-    "Tonyo's Speical Lugaw": 3.00,
+    "Tonyo's Speical Lugaw": 99.00,
     "Longsilog": 129.00,
     "Tapsilog": 129.00,
     "Tocilog": 129.00,
