@@ -10,7 +10,7 @@ menu = {
     "Tocilog": 129.00,
     "Pansit bihon (Regular)": 189.00,
     "Lumpiang Shanghai (20pcs)": 269.00,
-    "Coke Can": 75.05,
+    "Coke Can": 75.00,
     "Iced tea": 80.00,
     "Halo-Halo": 120.00,
 }
